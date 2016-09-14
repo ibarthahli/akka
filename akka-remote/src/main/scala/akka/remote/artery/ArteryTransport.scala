@@ -432,6 +432,7 @@ private[remote] class ArteryTransport(_system: ExtendedActorSystem, _provider: R
 
   private def startMediaDriver(): Unit = {
     if (settings.Advanced.EmbeddedMediaDriver) {
+      println(s"# ArteryTransport.startMediaDriver") // FIXME
       val driverContext = new MediaDriver.Context
       if (settings.Advanced.AeronDirectoryName.nonEmpty)
         driverContext.aeronDirectoryName(settings.Advanced.AeronDirectoryName)
@@ -462,7 +463,7 @@ private[remote] class ArteryTransport(_system: ExtendedActorSystem, _provider: R
       }
 
       val driver = MediaDriver.launchEmbedded(driverContext)
-      log.debug("Started embedded media driver in directory [{}]", driver.aeronDirectoryName)
+      log.info("Started embedded media driver in directory [{}]", driver.aeronDirectoryName)
       topLevelFREvents.loFreq(Transport_MediaDriverStarted, driver.aeronDirectoryName().getBytes("US-ASCII"))
       Runtime.getRuntime.addShutdownHook(stopMediaDriverShutdownHook)
       if (!mediaDriver.compareAndSet(None, Some(driver))) {
